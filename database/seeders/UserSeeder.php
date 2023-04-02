@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@mail.com',
             'name'  => 'Admin',
             'password' => \Hash::make('admin123456'),
+            'roles' => 'admin',
         ]);
 
         // $permissions = Permission::pluck('id', 'id')->all();
@@ -30,6 +31,8 @@ class UserSeeder extends Seeder
             'email' => 'manager@mail.com',
             'name'  => 'Manager',
             'password' => \Hash::make('manager123456'),
+            'roles' => 'manager',
+
         ]);
 
         $admin->assignRole('manager');

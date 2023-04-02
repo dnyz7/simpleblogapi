@@ -40,5 +40,6 @@ Route::middleware('auth:sanctum','json.response')->group( function () {
     Route::get('articles/{id}', [ArticleController::class,'show']);
     Route::post('articles/store', [ArticleController::class,'store']); // post an article
     Route::post('articles/edit/{id}', [ArticleController::class,'update']); // update an article
+    Route::post('articles/delete/{id}', [ArticleController::class,'delete']); // update an article
     
 });

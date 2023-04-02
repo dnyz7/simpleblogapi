@@ -8,7 +8,7 @@ use App\Http\Requests\ArticleRequests;
 use App\Http\Resources\Article as ArticleResource;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Log;
+use Validator;
 
 class ArticleController extends BaseController
 {
@@ -62,6 +62,17 @@ class ArticleController extends BaseController
 
     public function store(ArticleRequests $request)
     {
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'author' => 'required',
+            'detail' => 'required',
+        ]);
+   
+        if($validator->fails()){
+            return $this->sendError('Error validation', $validator->errors());       
+        }
+
         $user_id = Auth::user()->id;
         $input = $request->all();
         $input['user_id'] = $user_id;
@@ -108,11 +119,17 @@ class ArticleController extends BaseController
 
     public function update($id, ArticleRequests $request)
     {
+
+
         $user = Auth::user();
         // get role name
         $user_role = $user->roles->pluck('name')->take(1)[0];
 
         $article = Article::find($id);
+        //recheck article exist
+        if(is_null($article)){
+            return $this->sendError('Article not found.');
+        }
 
         //recheck ownership article when role is user
         if( $user_role == 'user' && $article->user_id != $user->id){
@@ -120,10 +137,11 @@ class ArticleController extends BaseController
         }
 
         $input = $request->all();
+        var_dump($input);
 
-        $article->title     = $input['title'];
-        $article->author    = $input['author'];
-        $article->detail    = $input['detail'];
+        if (!empty($input['title'])) {$article->title = $input['title'];}
+        if (!empty($input['author'])) {$article->title = $input['author'];}
+        if (!empty($input['detail'])) {$article->title = $input['detail'];}
         $article->update();
    
         return $this->sendResponse(new ArticleResource($article), 'Article update successfully.');
@@ -136,13 +154,18 @@ class ArticleController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete($id)
     {
         $user = Auth::user();
         // get role name
         $user_role = $user->roles->pluck('name')->take(1)[0];
 
         $article = Article::find($id);
+
+        //recheck article exist
+        if(is_null($article)){
+            return $this->sendError('Article not found.');
+        }
 
         //recheck ownership article when role is user
         if( $user_role == 'user' && $article->user_id != $user->id){
@@ -151,6 +174,6 @@ class ArticleController extends BaseController
 
         $article->delete();
 
-        return $this->sendResponse([], 'Article deleted successfully.');
+        return $this->sendResponse([], 'Article delete successfully.');
     }
 }

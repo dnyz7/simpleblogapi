@@ -79,6 +79,9 @@ class RegisterController extends BaseController
     public function update($id, Request $request)
     {
         $user = User::find($id);
+        if(is_null($user)){
+            return $this->sendError('User not found.');
+        }
         $input = $request->all();
 
         if (!empty($input['email'])) {$user->email = $input['email'];}
@@ -90,10 +93,13 @@ class RegisterController extends BaseController
 
     public function delete($id)
     {
-        if($user = User::find($id)){
-            $user->delete();
-
-            return response()->json(['message' => 'User successfully deleted']);
+       $user = User::find($id);
+        if(is_null($user)){
+            return $this->sendError('User not found.');
         }
+            
+        $user->delete();
+
+        return response()->json(['message' => 'User successfully deleted']);
     }
 }

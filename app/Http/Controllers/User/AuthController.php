@@ -47,25 +47,25 @@ class AuthController extends BaseController
         $user = User::create($input);
         
         // Assign Role
-        if(!empty($input['role'])){
-            if($input['role']=='admin'){
+        if(!empty($input['roles'])){
+            if($input['roles']=='admin'){
                 $user->assignRole('admin');
             }
-            if($input['role']=='manager'){
+            if($input['roles']=='manager'){
                 $user->assignRole('manager');
             } else {
                 $user->assignRole('user');
             }
         } else {
             $user->assignRole('user');
-            $input['role'] = 'user';
+            $input['roles'] = 'user';
 
         }
 
         $success['token'] =  $user->createToken('blog-app')->plainTextToken;
         $success['name'] =  $user->name;
         $success['token-type'] =  "Bearer";
-        $success['role'] =  $input['role'];
+        $success['roles'] =  $input['roles'];
    
    
         return $this->sendResponse($success, 'User created successfully.');
