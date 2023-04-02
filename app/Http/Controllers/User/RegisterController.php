@@ -31,6 +31,10 @@ class RegisterController extends BaseController
     {
         $roles = Role::pluck('name','name')->all();
         $users = User::all();
+        
+        if (is_null($users)) {
+            return $this->sendError('User not found.');
+        }
 
         return $this->sendResponse(UserResource::collection($users, $roles), 'User retrieved successfully.');
     }

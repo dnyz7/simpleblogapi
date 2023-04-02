@@ -22,8 +22,8 @@ Route::post('login', [AuthController::class, 'signin']);
 Route::post('register', [AuthController::class, 'signup']);
 
 
-Route::middleware('auth:sanctum')->group( function () {
-    Route::group(['middleware' => ['role:admin']], function () {
+Route::middleware('auth:sanctum','json.response')->group( function () {
+    Route::group(['middleware' => ['json.response','role:admin']], function () {
         Route::post('users/create', [RegisterController::class, 'create']);
         Route::post('users/edit/{id}', [RegisterController::class,'update']); // update a user
         Route::post('users/delete/{id}', [RegisterController::class,'delete']); // delete a user
