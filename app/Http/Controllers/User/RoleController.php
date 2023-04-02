@@ -114,7 +114,7 @@ class RoleController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Role $role)
+    public function delete(Role $role)
     {
         $role->delete();
 
